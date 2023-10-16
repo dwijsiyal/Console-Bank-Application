@@ -12,8 +12,17 @@ using namespace std;
 */
 class Customer {
 public:
-    Customer(string name, string address, int age, string telephone_number, int customer_number, int customer_type)
-        : name(name), address(address), age(age), telephone_number(telephone_number), customer_number(customer_number), customer_type(customer_type){
+
+    Customer create_customer(string name, string address, int age, string telephone_number, int customer_num, int customer_type) {
+        Customer customer;
+        customer.name = name;
+        customer.address = address;
+        customer.age = age;
+        customer.telephone_number = telephone_number;
+        customer.customer_number = customer_num;
+        customer.customer_type;
+
+        return customer;
     }
 
     // Accessors and modifiers 
@@ -119,9 +128,6 @@ const double Student::OVERDRAFT_PENALTY = 25;
 */
 class Transaction {
 public:
-    Transaction(string transaction_type, double amount, double balance, Date date)
-        : transaction_type(transaction_type), amount(amount), balance(balance), date(date) {
-    }
 
     string get_transaction_type() {
         return transaction_type;
@@ -170,12 +176,13 @@ private:
 class Account {
 public:
 
-    Account(Customer customer, double balance, int account_number, int account_type)
-        : customer(customer), balance(balance), account_number(account_number), account_type(account_type){
-    }
-
-    Account create_account(Customer customer, double balance, int account_num, int account_type) {
-        return Account(customer, balance, account_num, account_type);
+    Account create_account(Customer customer, int account_num, int account_type, double balance = 0) {
+        Account account;
+        account.customer = customer;
+        account.balance = balance;
+        account.account_number = account_num;
+        account.account_type = account_type;
+        return account;
     }
 
     // Accessors and Modifiers
@@ -207,7 +214,9 @@ public:
     void set_account_type(int account_type) {
         this->account_type = account_type;
     }
-
+    void set_account_number(int account_num) {
+        this->account_number = account_num;
+    }
 private:
     Customer customer;
     double balance;
@@ -223,6 +232,7 @@ class Savings_Account : public Account {
 public:
     void deposit(double amount) {
         this->set_balance(this->get_balance() + amount);
+        cout << "Amount $" << amount << "added to account '" << this->get_account_number() << "'" << endl;
         cout << "Your current balance is now: $" << this->get_balance() << endl;
     }
 
@@ -256,6 +266,7 @@ class Checking_Account : public Account {
 public:
     void deposit(double amount) {
         this->set_balance(this->get_balance() + amount);
+        cout << "Amount $" << amount << "added to account '" << this->get_account_number() << "'" << endl;
         cout << "Your current balance is now: $" << this->get_balance() << endl;
     }
 
@@ -288,30 +299,70 @@ public:
 */
 class Bank {
 public:
-    void add_account(Account account) {
+    void add_account(Customer customer, int account_num, int account_type) {
+        Account account;
+        account.create_account(customer, account_num, account_type);
         accounts.push_back(account);
     }
 
-    void make_deposit(Account account, double amount) {
-        // Add logic to make a deposit
-    }
-
-    void make_withdrawal(Account account, double amount) {
-        // Add logic to make a withdrawal
-    }
-
-    Account get_account(int account_number) {
-        for (auto account : accounts) {
-            if (account.get_account_number() == account_number) {
-                return account;
-            }
-            else {
-                cout << "Account number does not exixt please check the number and try again." << endl;
-                return;
-            }
+    void make_deposit(int account_num, double amount) {
+        Constants constants;
+        Account account = get_account(account_num);
+        if (constants.account_type[account.get_account_type()] == constants.account_type[0]) {
+            Checking_Account check_account = convert_to_check_account(account);
+            check_account.deposit(amount);
+        }
+        else if(constants.account_type[account.get_account_type()] == constants.account_type[1]){
+            Savings_Account savings_acc = convert_to_savings_account(account);
+            savings_acc.deposit(amount);
         }
     }
 
+    void make_withdrawal(int account_num, double amount) {
+        Constants constants;
+        Account account = get_account(account_num);
+        if (constants.account_type[account.get_account_type()] == constants.account_type[0]) {
+            Checking_Account check_account = convert_to_check_account(account);
+            check_account.withdraw(amount);
+        }
+        else if (constants.account_type[account.get_account_type()] == constants.account_type[1]) {
+            Savings_Account savings_acc = convert_to_savings_account(account);
+            savings_acc.withdraw(amount);
+        }
+    }
+
+    Account get_account(int account_number) {
+        try {
+            for (auto account : accounts) {
+                if (account.get_account_number() == account_number) {
+                    return account;
+                }
+                else {
+                    cout << "Account number does not exixt please check the number and try again." << endl;
+                    return;
+                }
+            }
+        }
+        catch (exception e) {
+            cout << "Exception occured : " << e.what() << endl;
+        }
+    }
+
+    Checking_Account convert_to_check_account(Account account) {
+        Checking_Account check_acc;
+        check_acc.set_balance(account.get_balance());
+        check_acc.set_customer(account.get_customer());
+        check_acc.set_account_type(account.get_account_type());
+        check_acc.set_account_number(account.get_account_number());
+    }
+
+    Savings_Account convert_to_savings_account(Account account) {
+        Savings_Account savings_acc;
+        savings_acc.set_balance(account.get_balance());
+        savings_acc.set_customer(account.get_customer());
+        savings_acc.set_account_type(account.get_account_type());
+        savings_acc.set_account_number(account.get_account_number());
+    }
 private:
     vector<Account> accounts;
 };
@@ -320,7 +371,7 @@ private:
 class Constants {
 
 public:
-    string AccountNumberPrefix = "2004";
+    static const string AccountNumberPrefix;
     map<int, string> customer_type = {
             {0 , "Adult"},
             {1, "Student"},
@@ -331,3 +382,5 @@ public:
         {1, "Savings"}
     };
 };
+
+const string Constants::AccountNumberPrefix = "2004";
