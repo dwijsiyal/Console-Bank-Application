@@ -240,7 +240,21 @@ public:
     {
         lJulianDay = YmdToJd( iYear, iMonth, iDay );
     }
-    Date convertToDate(const std::string& dateStr) {
+
+        //
+    // Function      : string format 'dd-MM-YYYY' constructor
+    //
+    // Author        : Dwij Siyal
+    //
+    // Creation date : 29 Nov 1995
+    //
+    // Parameters    : string format dd-MM-YYYY
+    //
+    // Return values : none
+    //
+    // Description   :
+    //
+    Date converToDate(const std::string& dateStr) {
         int day, month, year;
         char delimiter;
 

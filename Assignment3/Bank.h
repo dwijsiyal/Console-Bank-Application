@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 #include "Date.h"
 
 using namespace std;
@@ -11,50 +12,58 @@ using namespace std;
 */
 class Customer {
 public:
-    Customer(string name, string address, int age, string telephone_number, int customer_number)
-        : name(name), address(address), age(age), telephone_number(telephone_number), customer_number(customer_number) {
+    Customer(string name, string address, int age, string telephone_number, int customer_number, int customer_type)
+        : name(name), address(address), age(age), telephone_number(telephone_number), customer_number(customer_number), customer_type(customer_type){
     }
 
-    // Accessors and modifiers for data fields can be added here
+    // Accessors and modifiers 
 
-    string getName() {
+    string get_name() {
         return name;
     }
 
-    string getAddress() {
+    string get_address() {
         return address;
     }
 
-    int getAge() {
+    int get_age() {
         return age;
     }
 
-    string getTelephoneNumber() {
+    string get_telephone_number() {
         return telephone_number;
     }
 
-    int getCustomerNumber() {
+    int get_customer_number() {
         return customer_number;
     }
 
-    void setName(string name) {
+    int get_customer_type() {
+        return customer_type;
+    }
+
+    void set_name(string name) {
         this->name = name;
     }
 
-    void setAddress(string address) {
+    void set_address(string address) {
         this->address = address;
     }
 
-    void setAge(int age) {
+    void set_age(int age) {
         this->age = age;
     }
 
-    void setTelephoneNumber() {
+    void set_telephone_number(string telephone_number) {
         this->telephone_number = telephone_number;
     }
 
-    void setCustomerNumber() {
+    void set_customer_number(int customer_number) {
         this->customer_number = customer_number;
+    }
+
+    void set_customer_type(int customer_type) {
+        this->customer_type = customer_type;
     }
 
 private:
@@ -63,6 +72,7 @@ private:
     int age;
     string telephone_number;
     int customer_number;
+    int customer_type;
 };
 
 class Senior : public Customer {
@@ -113,36 +123,37 @@ public:
         : transaction_type(transaction_type), amount(amount), balance(balance), date(date) {
     }
 
-    string getTransactionType() {
+    string get_transaction_type() {
         return transaction_type;
     }
 
-    double getAmount() {
+    double get_amount() {
         return amount;
     }
 
-    double getBalance() {
+    double get_balance() {
         return balance;
     }
 
-    Date getDate() {
+    Date get_date() {
         return date;
     }
 
-    string setTransactionType(string transaction_type) {
+    string set_transaction_type(string transaction_type) {
         this->transaction_type = transaction_type;
     }
 
-    double setAmount(double amount) {
+    double set_amount(double amount) {
         this->amount = amount;
     }
 
-    double setBalance(double balance) {
+    double set_balance(double balance) {
         this->balance = balance;
     }
 
-    Date setDate(string date) {
-        this->date = 
+    Date set_date(string date) {
+        Date newDate;
+        this->date = newDate.converToDate(date);
     }
 
 
@@ -158,13 +169,16 @@ private:
 */
 class Account {
 public:
-    Account(Customer customer, double balance, int account_number)
-        : customer(customer), balance(balance), account_number(account_number) {
+
+    Account(Customer customer, double balance, int account_number, int account_type)
+        : customer(customer), balance(balance), account_number(account_number), account_type(account_type){
     }
 
-    void create_account() {
-        // Add logic to create an account here
+    Account create_account(Customer customer, double balance, int account_num, int account_type) {
+        return Account(customer, balance, account_num, account_type);
     }
+
+    // Accessors and Modifiers
 
     int get_account_number() {
         return account_number;
@@ -172,6 +186,10 @@ public:
 
     double get_balance() {
         return balance;
+    }
+
+    int get_account_type() {
+        return account_type;
     }
 
     Customer get_customer() {
@@ -186,10 +204,15 @@ public:
         this->balance = balance;
     }
 
+    void set_account_type(int account_type) {
+        this->account_type = account_type;
+    }
+
 private:
     Customer customer;
     double balance;
     int account_number;
+    int account_type;
     vector<Transaction> transactions;
 };
 
@@ -199,16 +222,31 @@ private:
 class Savings_Account : public Account {
 public:
     void deposit(double amount) {
-        // Add logic to deposit money into savings account
+        this->set_balance(this->get_balance() + amount);
+        cout << "Your current balance is now: $" << this->get_balance() << endl;
     }
 
     void withdraw(double amount) {
-        // Add logic to withdraw money from savings account
+        if (this->get_balance() > amount) {
+            this->set_balance(this->get_balance() - amount);
+        }
+        else {
+            cout << "Insuffcient balance!" << endl;
+        }
     }
 
     void add_interest() {
-        // Add logic to add interest to savings account
-    }
+        Constants constants;
+        string customer_type = constants.customer_type[this->get_customer().get_customer_type()];
+        if (customer_type == constants.customer_type[0]) {
+            this->set_balance(this->get_balance() + Adult::SAVINGS_INTEREST);
+        }
+        else if (customer_type == constants.customer_type[1]) {
+            this->set_balance(this->get_balance() + Student::SAVINGS_INTEREST);
+        }
+        else if (customer_type == constants.customer_type[2]) {
+            this->set_balance(this->get_balance() + Senior::SAVINGS_INTEREST);
+        }
 };
 
 /*
@@ -217,15 +255,31 @@ public:
 class Checking_Account : public Account {
 public:
     void deposit(double amount) {
-        // Add logic to deposit money into checking account
+        this->set_balance(this->get_balance() + amount);
+        cout << "Your current balance is now: $" << this->get_balance() << endl;
     }
 
     void withdraw(double amount) {
-        // Add logic to withdraw money from checking account
+        if (this->get_balance() > amount) {
+            this->set_balance(this->get_balance() - amount);
+        }
+        else {
+            cout << "Insuffcient balance!" << endl;
+        }
     }
 
     void add_interest() {
-        // Add logic to add interest to checking account
+        Constants constants;
+        string customer_type = constants.customer_type[this->get_customer().get_customer_type()];
+        if (customer_type == constants.customer_type[0]) {
+            this->set_balance(this->get_balance() + Adult::CHECK_INTEREST);
+        }
+        else if (customer_type == constants.customer_type[1]) {
+            this->set_balance(this->get_balance() + Student::CHECK_INTEREST);
+        }
+        else if (customer_type == constants.customer_type[2]) {
+            this->set_balance(this->get_balance() + Senior::CHECK_INTEREST);
+        }
     }
 };
 
@@ -247,9 +301,33 @@ public:
     }
 
     Account get_account(int account_number) {
-        // Add logic to retrieve an account by account number
+        for (auto account : accounts) {
+            if (account.get_account_number() == account_number) {
+                return account;
+            }
+            else {
+                cout << "Account number does not exixt please check the number and try again." << endl;
+                return;
+            }
+        }
     }
 
 private:
     vector<Account> accounts;
+};
+
+// the previous method of constant declaration didnt worked with maps (dictionary in cpp) hence used a normal class for constants.
+class Constants {
+
+public:
+    string AccountNumberPrefix = "2004";
+    map<int, string> customer_type = {
+            {0 , "Adult"},
+            {1, "Student"},
+            {2, "Senior"}
+    };
+    map<int, string> account_type = {
+        {0 , "Checking"},
+        {1, "Savings"}
+    };
 };
