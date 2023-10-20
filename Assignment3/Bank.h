@@ -756,9 +756,12 @@ public:
 	}
 };
 
-/*
-* @breif Bank class for Bank operations
-*/
+/**
+ * @class Bank
+ * @brief A class representing a bank and its operations.
+ * @details This class provides functions to create and manage accounts, make deposits and withdrawals,
+ * and perform conversions between different types of bank accounts.
+ */
 class Bank {
 public:
 
@@ -786,12 +789,12 @@ public:
 		return account;
 	}
 
-	 /**
-     * Make a deposit to an existing account in the bank.
-     * @param account_num The account number for which the deposit is made.
-     * @param amount The amount to be deposited.
-     * @param date The date of the deposit (optional, default is "-").
-     */
+	/**
+	* Make a deposit to an existing account in the bank.
+	* @param account_num The account number for which the deposit is made.
+	* @param amount The amount to be deposited.
+	* @param date The date of the deposit (optional, default is "-").
+	*/
 	void make_deposit(int account_num, double amount, string date = "-") {
 		try {
 			Constants constants;
@@ -816,12 +819,12 @@ public:
 		}
 	}
 
-	 /**
-     * Make a withdrawal from an existing account in the bank.
-     * @param account_num The account number from which the withdrawal is made.
-     * @param amount The amount to be withdrawn.
-     * @param date The date of the withdrawal (optional, default is "-").
-     */
+	/**
+	* Make a withdrawal from an existing account in the bank.
+	* @param account_num The account number from which the withdrawal is made.
+	* @param amount The amount to be withdrawn.
+	* @param date The date of the withdrawal (optional, default is "-").
+	*/
 	void make_withdrawal(int account_num, double amount, string date = "-") {
 		try {
 			Constants constants;
@@ -846,11 +849,11 @@ public:
 		}
 	}
 
-	 /**
-     * Get an account by its account number.
-     * @param account_number The account number to retrieve.
-     * @return The account with the specified account number.
-     */
+	/**
+	* Get an account by its account number.
+	* @param account_number The account number to retrieve.
+	* @return The account with the specified account number.
+	*/
 	Account get_account(int account_number) {
 		Account account;
 		try {
@@ -893,11 +896,11 @@ public:
 		}
 	}
 
-	 /**
-     * Convert an Account object to a Checking_Account object.
-     * @param account The Account object to be converted.
-     * @return The corresponding Checking_Account object.
-     */
+	/**
+	* Convert an Account object to a Checking_Account object.
+	* @param account The Account object to be converted.
+	* @return The corresponding Checking_Account object.
+	*/
 	Checking_Account convert_to_check_account(Account account) {
 		Checking_Account check_acc;
 		try {
@@ -913,11 +916,11 @@ public:
 		return check_acc;
 	}
 
-	 /**
-     * Convert an Account object to a Savings_Account object.
-     * @param account The Account object to be converted.
-     * @return The corresponding Savings_Account object.
-     */
+	/**
+	* Convert an Account object to a Savings_Account object.
+	* @param account The Account object to be converted.
+	* @return The corresponding Savings_Account object.
+	*/
 	Savings_Account convert_to_savings_account(Account account) {
 		Savings_Account savings_acc;
 		try {
@@ -933,11 +936,11 @@ public:
 		return savings_acc;
 	}
 
-	 /**
-     * Convert a Checking_Account object to an Account object.
-     * @param child_account The Checking_Account object to be converted.
-     * @return The corresponding Account object.
-     */
+	/**
+	* Convert a Checking_Account object to an Account object.
+	* @param child_account The Checking_Account object to be converted.
+	* @return The corresponding Account object.
+	*/
 	Account convert_to_account(Checking_Account child_account) {
 		Account account;
 		try {
@@ -953,11 +956,11 @@ public:
 		return account;
 	}
 
-	 /**
-     * Convert a Savings_Account object to an Account object.
-     * @param child_account The Savings_Account object to be converted.
-     * @return The corresponding Account object.
-     */
+	/**
+	* Convert a Savings_Account object to an Account object.
+	* @param child_account The Savings_Account object to be converted.
+	* @return The corresponding Account object.
+	*/
 	Account convert_to_account(Savings_Account child_account) {
 		Account account;
 		try {
@@ -973,38 +976,38 @@ public:
 		return account;
 	}
 
-	 /**
-     * Create a unique account number based on the account count.
-     * @param acc_count The count of accounts in the bank.
-     * @return The newly generated account number.
-     */
+	/**
+	* Create a unique account number based on the account count.
+	* @param acc_count The count of accounts in the bank.
+	* @return The newly generated account number.
+	*/
 	int create_account_number(int acc_count) {
 		Constants constants;
 		return stoi(constants.AccountNumberPrefix + to_string(acc_count));
 	}
 
-	 /**
-     * Create a unique customer number based on the account count.
-     * @param acc_count The count of accounts in the bank.
-     * @return The newly generated customer number.
-     */
+	/**
+	* Create a unique customer number based on the account count.
+	* @param acc_count The count of accounts in the bank.
+	* @return The newly generated customer number.
+	*/
 	int create_customer_number(int acc_count) {
 		Constants constants;
 		return stoi(constants.CustomerNumberPrefix + to_string(acc_count));
 	}
 
-	 /**
-     * Add an account to the bank's accounts list.
-     * @param account The account to be added.
-     */
+	/**
+	* Add an account to the bank's accounts list.
+	* @param account The account to be added.
+	*/
 	void add_account(Account account) {
 		accounts.push_back(account);
 	}
 
-	 /**
-     * Get a list of all accounts in the bank.
-     * @return A vector of all accounts in the bank.
-     */
+	/**
+	* Get a list of all accounts in the bank.
+	* @return A vector of all accounts in the bank.
+	*/
 	vector<Account> get_accounts() {
 		return accounts;
 	}
