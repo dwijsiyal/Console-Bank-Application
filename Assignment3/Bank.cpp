@@ -1,5 +1,10 @@
 #include "Bank.h"
 
+/**
+ * @file Bank.cpp
+ * @brief This file contains the declaration and implementations classses required to perform all banking functions..
+ */
+
 using namespace std;
 
 const double Student::SAVINGS_INTEREST = 0.04;
