@@ -82,10 +82,10 @@ Bank create_account(Bank bank, int count) {
 		}
 		customer.set_customer_type(int_input);
 
-		cout << "Select Customer Type: " << endl;
+		cout << "Select Account Type: " << endl;
 		cout << "0) Checking, 1) Savings" << endl;
 		cin >> account_type;
-		if (int_input > 1) {
+		if (account_type > 1) {
 			cout << "invalid Input";
 			return bank;
 		}
@@ -99,11 +99,10 @@ Bank create_account(Bank bank, int count) {
 		if (string_input == "Y") {
 			cout << "Please Enter Deposit Amount: $";
 			cin >> double_input;
-			bank.add_account(bank.create_account(customer, account_number, account_type, double_input));
-			cout << "Amount $" << double_input << " has been deposited in your account" << endl;
+			bank.create_account(customer, account_number, account_type, double_input);
 		}
 		else {
-			bank.add_account(bank.create_account(customer, account_number, account_type));
+			bank.create_account(customer, account_number, account_type);
 
 		}
 		cout << "Your account number is: '" << account_number << "'" << endl;
@@ -159,7 +158,9 @@ void check_acc(Bank bank) {
 		cin >> account_num;
 
 		Account account = bank.get_account(account_num);
-		display_account_info(account);
+		if (account.get_account_number() > 0) {
+			display_account_info(account);
+		}
 	}
 	catch (exception e) {
 		cout << "Exception occured: " << e.what() << endl;
@@ -169,7 +170,7 @@ void check_acc(Bank bank) {
 void display_customer(Customer customer) {
 	try {
 		Constants constants;
-		cout << "Custoemr Information: " << endl;
+		cout << "\nCustoemr Information: " << endl;
 		cout << left << setw(20) << "Name: " << setw(20) << customer.get_name() << endl;
 		cout << left << setw(20) << "Age: " << setw(20) << customer.get_age() << endl;
 		cout << left << setw(20) << "Address: " << setw(20) << customer.get_address() << endl;
@@ -186,10 +187,11 @@ void display_account_info(Account account) {
 		Constants constants;
 		display_customer(account.get_customer());
 
-		cout << "Account Information: " << endl;
+		cout << "\nAccount Information: " << endl;
 		cout << left << setw(20) << "Accont No.: " << setw(20) << account.get_account_number() << endl;
 		cout << left << setw(20) << "Account Type: " << setw(20) << constants.account_type[account.get_account_type()] << endl;
-		cout << left << "Transactions: " << endl;
+		cout << left << setw(20) << "Current Balance: $" << setw(20) << account.get_balance() << endl;
+		cout << left << "\nTransactions: \n" << endl;
 
 		display_transactions(account.get_transactions());
 	}

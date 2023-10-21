@@ -546,12 +546,15 @@ public:
 	void deposit(double amount, string date) {
 		try {
 			Transaction transaction;
-
+			if (amount <= 0) {
+				cout << "Deposit of 0 or less than zero is not allowed. Please try again with a valid deposit." << endl;
+				return;
+			}
 			this->set_balance(this->get_balance() + amount);
 			this->add_transaction(transaction.create_transaction(0, this->get_balance(), amount, date));
-			this->add_interest();
 			cout << "Amount $" << amount << " added to account '" << this->get_account_number() << "'" << endl;
 			cout << "Your current balance is now: $" << this->get_balance() << endl;
+			this->add_interest();
 		}
 		catch (exception e) {
 			cout << "Exception occurred: " << e.what() << endl;
@@ -571,7 +574,10 @@ public:
 			int overdraft_penalty;
 			double check_charge;
 			string customer_type = constants.customer_type[this->get_customer().get_customer_type()];
-
+			if (amount <= 0) {
+				cout << "Withdrawal of 0 or less than zero is not allowed. Please try again with a valid withdrawal." << endl;
+				return;
+			}
 			if (customer_type == constants.customer_type[0]) {
 				overdraft_penalty = Adult::OVERDRAFT_PENALTY;
 				check_charge = Adult::CHECK_CHARGE;
@@ -597,7 +603,7 @@ public:
 				if (this->get_balance() <= 5) {
 					cout << "Minimum Balance in Account must be $5, an overdraft penalty will be imposed of $" << overdraft_penalty << endl;
 					this->set_balance(this->get_balance() - overdraft_penalty);
-					this->add_transaction(transaction.create_transaction(4, this->get_balance(), amount, date, "overdraft penalty"));
+					this->add_transaction(transaction.create_transaction(4, this->get_balance(), overdraft_penalty, date, "overdraft penalty"));
 				}
 				else {
 					string comment = "Insufficient balance!";
@@ -665,9 +671,9 @@ public:
 			}
 			this->set_balance(this->get_balance() + amount);
 			this->add_transaction(transaction.create_transaction(0, this->get_balance(), amount, date));
-			this->add_interest();
 			cout << "Amount $" << amount << " added to account '" << this->get_account_number() << "'" << endl;
 			cout << "Your current balance is now: $" << this->get_balance() << endl;
+			this->add_interest();
 		}
 		catch (exception e) {
 			cout << "Exception occurred: " << e.what() << endl;
@@ -711,7 +717,7 @@ public:
 					comment = "overdraft penalty";
 					cout << "Minimum Balance in Account must be $5. An overdraft penalty will be imposed of $" << overdraft_penalty << endl;
 					this->set_balance(this->get_balance() - overdraft_penalty);
-					this->add_transaction(transaction.create_transaction(4, this->get_balance(), amount, date, comment));
+					this->add_transaction(transaction.create_transaction(4, this->get_balance(), overdraft_penalty, date, comment));
 				}
 				else {
 					comment = "Insufficient balance!";
@@ -778,9 +784,12 @@ public:
 		try {
 			Transaction transaction;
 			account = account.create_account(customer, account_num, account_type);
+			this->add_account(account);
+
 			if (initial_deposit > 0) {
-				account.set_balance(initial_deposit);
-				account.add_transaction(transaction.create_transaction(0, account.get_balance(), initial_deposit));
+				make_deposit(account.get_account_number(), initial_deposit);
+				//account.set_balance(initial_deposit);
+				//account.add_transaction(transaction.create_transaction(0, account.get_balance(), initial_deposit));
 			}
 		}
 		catch (exception e) {
